@@ -1,0 +1,10 @@
+.Rproj.user/
+renv/
+*.html
+*.aux.out
+*.log
+*.aux.rds
+*.rdx
+*.aux.bak
+*.log.bak
+*.rdx.bak
