@@ -7,3 +7,4 @@ renv/
 *.aux.bak
 *.log.bak
 *.rdx.bak
+!analysis.html
