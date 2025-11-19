@@ -1,6 +1,5 @@
 .Rproj.user/
 renv/
-*.html
 *.aux.out
 *.log
 *.aux.rds
@@ -8,3 +7,4 @@ renv/
 *.aux.bak
 *.log.bak
 *.rdx.bak
+!analysis.html
