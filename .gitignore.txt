@@ -1,6 +1,5 @@
 .Rproj.user/
 renv/
-*.html
 *.aux.out
 *.log
 *.aux.rds
