@@ -1,0 +1,72 @@
+---
+title: "Анализ данных mtcars"
+author: "Бочарникова Анастасия"
+date: "2025-11-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(knitr)
+```
+**Введение**
+В этом отчёте анализируется встроенный набор данных mtcars. Мы выполним отбор и фильтрацию данных, добавим новые переменные, сгруппируем данные и выведем итоговые результаты.
+
+1. **Отбор и фильтрация данных**
+Выбраны столбцы: mpg, disp, hp, drat, vs. 
+Отфильтрованы строки, где количество лошадиных сил (hp) больше 150.
+```{r filter}
+filtered_data <- mtcars %>%
+  select(mpg, disp, hp, drat, vs) %>%
+  filter(hp > 150)
+```
+
+Количество автомобилей после фильтрации: `r nrow(filtered_data)`
+
+2. **Создание новых переменных**
+Добавлены два новых столбца:
+hp_per_disp: отношение мощности (hp) к объёму двигателя (disp)
+fuel_efficiency: категория автомобиля на основе расхода топлива (mpg)
+```{r transform}
+transformed_data <- filtered_data %>%
+  mutate(
+    hp_per_disp = hp / disp,
+    fuel_efficiency = case_when(
+      mpg < 15 ~ "low",
+      mpg >= 15 & mpg <= 20 ~ "medium",
+      mpg > 20 ~ "high"
+    )
+  )
+```
+
+3. **Группировка и агрегация**
+Данные сгруппированы по столбцам vs и fuel_efficiency. Для каждой группы посчитаны: 
+среднее значение объёма двигателя (disp), 
+минимальное и максимальное значение мощности (hp), 
+количество наблюдений в группе.
+```{r results}
+result <- transformed_data %>%
+  group_by(vs, fuel_efficiency) %>%
+  summarise(
+    mean_disp = mean(disp),
+    min_hp = min(hp),
+    max_hp = max(hp),
+    count = n(),
+    .groups = 'drop'
+  ) %>%
+  arrange(desc(mean_disp))
+```
+
+4. **Результаты**
+
+Итоговая таблица после всех преобразований:
+```{r print-table}
+kable(result)
+```
+
+---
+
+**Выводы:**
+
+Всего в анализе использовано `r nrow(transformed_data)` автомобилей после фильтрации.
+Наибольший средний объём двигателя (`r round(max(result$mean_disp), 1)` куб. дюймов) наблюдается в группе с `r result$vs[which.max(result$mean_disp)]` и категорией `r result$fuel_efficiency[which.max(result$mean_disp)]`.
